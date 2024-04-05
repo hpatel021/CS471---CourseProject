@@ -1,0 +1,145 @@
+Overall Statistics:
+Total Time: 5.81432 seconds
+Aggregate Sales: $256611
+Store 1 Total Sales: $27013
+Store 2 Total Sales: $49745
+Store 3 Total Sales: $17048
+Store 4 Total Sales: $14930
+Store 5 Total Sales: $25250
+Store 6 Total Sales: $26312
+Store 7 Total Sales: $15886
+Store 8 Total Sales: $44536
+Store 9 Total Sales: $8350
+Store 10 Total Sales: $27541
+Month 1 Total Sales: $22454
+Month 2 Total Sales: $25690
+Month 3 Total Sales: $19371
+Month 4 Total Sales: $23980
+Month 5 Total Sales: $18557
+Month 6 Total Sales: $24478
+Month 7 Total Sales: $17395
+Month 8 Total Sales: $19379
+Month 9 Total Sales: $18554
+Month 10 Total Sales: $24868
+Month 11 Total Sales: $19586
+Month 12 Total Sales: $22299
+h 1 Total Sales: $737
+Month 4 Total Sales: $895
+Month 2 Total Sales: $1461
+Month 4 Total Sales: $1795
+Month 3 Total Sales: $2986
+Month 5 Total Sales: $366
+Month 4 Total Sales: $1505
+Month 5 Total Sales: $1790
+Month 6 Total Sales: $540
+Month 5 Total Sales: $1341
+Month 6 Total Sales: $1673
+Month 7 Total Sales: $1497
+Month 6 Total Sales: $2481
+Month 7 Total Sales: $0
+Month 8 Total Sales: $203
+
+Consumer 2 Statistics:
+Store 2 Total Sales: $49745
+Month 7 Total Sales: $988
+Month 8 Total Sales: $796
+Month 9 Total Sales: $0
+Month 8 Total Sales: $0
+Month 10 Total Sales: $1017
+Month 9 Total Sales: $955
+Month 1 Total Sales: $1424
+Month 9 Total Sales: $900
+Month 10 Total Sales: $1225
+Month 11 Total Sales: $170
+Month 2 Total Sales: $6228
+Month 10 Total Sales: $1047
+Month 11 Total Sales: $1956
+Month 12 Total Sales: $1048
+Month 3 Total Sales: $3797
+Month 11 Total Sales: $1394
+
+Consumer 3 Statistics:
+Store 3 Total Sales: $17048
+Month 12 Total Sales: $251
+Month 4 Total Sales: $7048
+Month 12 Total Sales: $1972
+Month 5 Total Sales: $3185
+Month 6 Total Sales: $4037
+Month 1 Total Sales: $1866
+Month 7 Total Sales: $3125
+Month 8 Total Sales: $5026
+Month 9 Total Sales: $3316
+Month 10 Total Sales: $3141
+Month 11 Total Sales: $5584
+Month 12 Total Sales: $3834
+
+Consumer 10 Statistics:
+Store 10 Total Sales: $27541
+Month 2 Total Sales: $1745
+Month 3 Total Sales: $1140
+Month 1 Total Sales: $2184
+
+Consumer 8 Statistics:
+Store 8 Total Sales: $44536
+
+Consumer 5 Statistics:
+Store 5 Total Sales: $25250
+Month 1 Total Sales: $4412
+Month 2 Total Sales: $4563
+Month 3 Total Sales: $3066
+Month 4 Total Sales: $3637
+Month 5 Total Sales: $2173
+Month 6 Total Sales: $1916
+Month 7 Total Sales: $2963
+
+Consumer 1 Statistics:
+Store 1 Total Sales: $27013
+Month 4 Total Sales: $1934
+Month 1 Total Sales: $2866
+Month 2 Total Sales: $1657
+Month 3 Total Sales: $1760
+Month 4 Total Sales: $1118
+Month 5 Total Sales: $2308
+Month 6 Total Sales: $1299
+Month 7 Total Sales: $3474
+Month 8 Total Sales: $1723
+Month 9 Total Sales: $2865
+Month 10 Total Sales: $1659
+Month 11 Total Sales: $2918
+Month 12 Total Sales: $3366
+Month 2 Total Sales: $2364
+Month 3 Total Sales: $1605
+Month 1 Total Sales: $2045
+Month 4 Total Sales: $1115
+Month 2 Total Sales: $2184
+Month 8 Total Sales: $4516
+Month 3 Total Sales: $2134
+Month 5 Total Sales: $3262
+Month 4 Total Sales: $1844
+Month 9 Total Sales: $3520
+Month 6 Total Sales: $3029
+Month 10 Total Sales: $6518
+Month 5 Total Sales: $497
+Month 5 Total Sales: $1653
+Month 11 Total Sales: $3408
+Month 7 Total Sales: $1286
+Month 6 Total Sales: $4044
+Month 12 Total Sales: $3844
+Month 6 Total Sales: $2657
+Month 7 Total Sales: $1958
+Month 8 Total Sales: $2032
+Month 7 Total Sales: $1536
+Month 8 Total Sales: $3474
+Month 9 Total Sales: $1654
+Month 8 Total Sales: $941
+Month 9 Total Sales: $3533
+Month 10 Total Sales: $2571
+Month 9 Total Sales: $344
+Month 11 Total Sales: $340
+Month 10 Total Sales: $1273
+Month 10 Total Sales: $3762
+Month 12 Total Sales: $1349
+Month 11 Total Sales: $1535
+Month 12 Total Sales: $1580
+Month 11 Total Sales: $1327
+Month 12 Total Sales: $2042
