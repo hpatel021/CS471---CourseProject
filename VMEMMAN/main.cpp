@@ -1,223 +1,223 @@
 #include <iostream>
-#include <list>
-#include <vector>
-#include <algorithm>
 #include <fstream>
-#include <iomanip>
-#include <iterator>
+#include <vector>
 #include <unordered_map>
+#include <algorithm>
+#include <iomanip>
 
 using namespace std;
 
 /**
- * Reads page numbers from a file and returns them as a vector.
- *
- * @param inputFile The name of the input file.
- * @return A vector containing the page numbers read from the file.
+ * FIFO Page Replacement Algorithm
+ * 
+ * @param virtualAddresses Vector containing virtual addresses referenced by the process
+ * @param numFrames Number of frames allocated to the process
+ * @return Number of page faults that occurred during the simulation
  */
-vector<int> readPageNumbers(const string& inputFile) {
-    ifstream fin(inputFile);
-    vector<int> pageNumbers;
-    int pageNumber;
-
-    while (fin >> pageNumber) {
-        pageNumbers.push_back(pageNumber);
-    }
-    return pageNumbers;
-}
-
-/**
- * Calculates the page fault rate given the number of page faults and total references.
- *
- * @param pageFaults The number of page faults.
- * @param totalReferences The total number of page references.
- * @return The page fault rate as a percentage.
- */
-double calculatePageFaultRate(int pageFaults, int totalReferences) {
-    return (static_cast<double>(pageFaults) / totalReferences) * 100;
-}
-
-/**
- * Implements the FIFO (First-In-First-Out) page replacement algorithm.
- *
- * @param pageNumbers A vector containing the sequence of page references.
- * @param frameSize The number of frames in the memory.
- * @return The number of page faults occurred during execution.
- */
-int fifo(const vector<int>& pageNumbers, int frameSize) {
-    list<int> frames;
+int fifo(const vector<int>& virtualAddresses, int numFrames) {
+    unordered_map<int, bool> frames;
     int pageFaults = 0;
 
-    for (vector<int>::size_type i = 0; i < pageNumbers.size(); ++i) {
-        auto it = find(frames.begin(), frames.end(), pageNumbers[i]);
-
-        if (it == frames.end()) {
-            if (frames.size() == static_cast<size_t>(frameSize)) {
-                frames.pop_back();
-            }
-            frames.push_front(pageNumbers[i]);
+    vector<int> fifoQueue;
+    for (int address : virtualAddresses) {
+        if (frames.find(address) == frames.end()) {
             pageFaults++;
+            if (fifoQueue.size() == numFrames) {
+                int oldest = fifoQueue.front();
+                fifoQueue.erase(fifoQueue.begin());
+                frames.erase(oldest);
+            }
+            fifoQueue.push_back(address);
+            frames[address] = true;
         }
     }
+
     return pageFaults;
 }
 
 /**
- * Implements the LRU (Least Recently Used) page replacement algorithm.
- *
- * @param pageNumbers A vector containing the sequence of page references.
- * @param frameSize The number of frames in the memory.
- * @return The number of page faults occurred during execution.
+ * LRU Page Replacement Algorithm
+ * 
+ * @param virtualAddresses Vector containing virtual addresses referenced by the process
+ * @param numFrames Number of frames allocated to the process
+ * @return Number of page faults that occurred during the simulation
  */
-int lru(const vector<int>& pageNumbers, int frameSize) {
-    list<int> frames;
-    unordered_map<int, list<int>::iterator> pageMap;
+int lru(const vector<int>& virtualAddresses, int numFrames) {
+    unordered_map<int, int> frames;
     int pageFaults = 0;
+    int counter = 0;
 
-    for (vector<int>::size_type i = 0; i < pageNumbers.size(); ++i) {
-        auto it = pageMap.find(pageNumbers[i]);
-
-        if (it == pageMap.end()) {
-            if (frames.size() == static_cast<size_t>(frameSize)) {
-                pageMap.erase(frames.back());
-                frames.pop_back();
-            }
-            frames.push_front(pageNumbers[i]);
-            pageMap[pageNumbers[i]] = frames.begin();
+    for (int address : virtualAddresses) {
+        if (frames.find(address) == frames.end()) {
             pageFaults++;
+            if (frames.size() == numFrames) {
+                int lru = min_element(frames.begin(), frames.end(),
+                    [](const pair<int, int>& a, const pair<int, int>& b) { return a.second < b.second; })->first;
+                frames.erase(lru);
+            }
+            frames[address] = counter++;
         } else {
-            frames.erase(it->second);
-            frames.push_front(pageNumbers[i]);
-            pageMap[pageNumbers[i]] = frames.begin();
+            frames[address] = counter++;
         }
     }
+
     return pageFaults;
 }
 
 /**
- * Implements the MRU (Most Recently Used) page replacement algorithm.
- *
- * @param pageNumbers A vector containing the sequence of page references.
- * @param frameSize The number of frames in the memory.
- * @return The number of page faults occurred during execution.
+ * MRU Page Replacement Algorithm
+ * 
+ * @param virtualAddresses Vector containing virtual addresses referenced by the process
+ * @param numFrames Number of frames allocated to the process
+ * @return Number of page faults that occurred during the simulation
  */
-int mru(const vector<int>& pageNumbers, int frameSize) {
-    list<int> frames;
-    unordered_map<int, list<int>::iterator> pageMap;
+int mru(const vector<int>& virtualAddresses, int numFrames) {
+    unordered_map<int, int> frames;
     int pageFaults = 0;
+    int counter = 0;
 
-    for (vector<int>::size_type i = 0; i < pageNumbers.size(); ++i) {
-        auto it = pageMap.find(pageNumbers[i]);
-
-        if (it == pageMap.end()) {
-            if (frames.size() == static_cast<size_t>(frameSize)) {
-                pageMap.erase(frames.front());
-                frames.pop_front();
-            }
-            frames.push_back(pageNumbers[i]);
-            pageMap[pageNumbers[i]] = --frames.end();
+    for (int address : virtualAddresses) {
+        if (frames.find(address) == frames.end()) {
             pageFaults++;
+            if (frames.size() == numFrames) {
+                int mru = max_element(frames.begin(), frames.end(),
+                    [](const pair<int, int>& a, const pair<int, int>& b) { return a.second < b.second; })->first;
+                frames.erase(mru);
+            }
+            frames[address] = counter++;
         } else {
-            frames.erase(it->second);
-            frames.push_back(pageNumbers[i]);
-            pageMap[pageNumbers[i]] = --frames.end();
+            frames[address] = counter++;
         }
     }
+
     return pageFaults;
 }
 
 /**
- * Implements the Optimal page replacement algorithm.
- *
- * @param pageNumbers A vector containing the sequence of page references.
- * @param frameSize The number of frames in the memory.
- * @return The number of page faults occurred during execution.
+ * Optimal Page Replacement Algorithm
+ * 
+ * @param virtualAddresses Vector containing virtual addresses referenced by the process
+ * @param numFrames Number of frames allocated to the process
+ * @return Number of page faults that occurred during the simulation
  */
-int optimal(const vector<int>& pageNumbers, int frameSize) {
-    list<int> frames;
-    unordered_map<int, int> nextPage;
+int optimal(const vector<int>& virtualAddresses, int numFrames) {
+    unordered_map<int, int> frames;
     int pageFaults = 0;
+    vector<int> futureIndexes(virtualAddresses.size(), 0);
 
-    for (vector<int>::size_type i = 0; i < pageNumbers.size(); ++i) {
-        auto it = find(frames.begin(), frames.end(), pageNumbers[i]);
+    for (int i = 0; i < virtualAddresses.size(); ++i) {
+        futureIndexes[i] = -1;
+        for (int j = i + 1; j < virtualAddresses.size(); ++j) {
+            if (virtualAddresses[i] == virtualAddresses[j]) {
+                futureIndexes[i] = j;
+                break;
+            }
+        }
+    }
 
-        if (it == frames.end()) {
-            if (frames.size() == static_cast<size_t>(frameSize)) {
-                int farthest = -1, idx = -1;
-                for (auto iter = frames.begin(); iter != frames.end(); ++iter) {
-                    if (nextPage[*iter] == -1) {
-                        idx = distance(frames.begin(), iter);
+    for (int i = 0; i < virtualAddresses.size(); ++i) {
+        if (frames.find(virtualAddresses[i]) == frames.end()) {
+            pageFaults++;
+            if (frames.size() == numFrames) {
+                int farthest = -1, replace;
+                for (const auto& frame : frames) {
+                    if (futureIndexes[i] == -1) {
+                        replace = frame.first;
                         break;
-                    } else {
-                        if (nextPage[*iter] > farthest) {
-                            farthest = nextPage[*iter];
-                            idx = distance(frames.begin(), iter);
-                        }
+                    }
+                    if (futureIndexes[frame.first] == -1) {
+                        replace = frame.first;
+                        break;
+                    }
+                    if (futureIndexes[frame.first] > farthest) {
+                        farthest = futureIndexes[frame.first];
+                        replace = frame.first;
                     }
                 }
-                auto it = frames.begin();
-                advance(it, idx);
-                frames.erase(it);
+                frames.erase(replace);
             }
-            frames.push_front(pageNumbers[i]);
-            pageFaults++;
+            frames[virtualAddresses[i]] = 1;
         }
-
-        nextPage[pageNumbers[i]] = i;
     }
+
     return pageFaults;
 }
 
 /**
- * Runs experiments with different parameters for page replacement algorithms.
- *
- * @param inputFile The name of the input file containing page references.
- * @param pageSize The page size.
- * @param numFrames The number of frames in the memory.
+ * Function to simulate page replacement algorithm
+ * 
+ * @param virtualAddresses Vector containing virtual addresses referenced by the process
+ * @param pageSize Size of each page in words
+ * @param numFrames Number of frames allocated to the process
+ * @param algorithm Name of the page replacement algorithm to use
+ * @return Number of page faults that occurred during the simulation
  */
-void runExperiments(const string& inputFile, int pageSize, int numFrames) {
-    vector<int> pageNumbers = readPageNumbers(inputFile);
-    int numPages = pageNumbers.size();
-    cout << "Page Size: " << pageSize << ", Number of Frames: " << numFrames << endl;
-    cout << "--------------------------------------------" << endl;
-    cout << "Algorithm\tPage Fault Percentage" << endl;
-    cout << "--------------------------------------------" << endl;
+int simulate(const vector<int>& virtualAddresses, int pageSize, int numFrames, string algorithm) {
+    // For simplicity, assume each page is of size 'pageSize'
+    // Convert virtual addresses to page numbers
+    vector<int> pageNumbers;
+    for (int address : virtualAddresses) {
+        pageNumbers.push_back(address / pageSize);
+    }
 
-    double pageFaultPercentage;
-
-    // FIFO
-    int fifoFaults = fifo(pageNumbers, numFrames);
-    pageFaultPercentage = calculatePageFaultRate(fifoFaults, numPages);
-    cout << "FIFO\t\t" << fixed << setprecision(2) << pageFaultPercentage << "%" << endl;
-
-    // LRU
-    int lruFaults = lru(pageNumbers, numFrames);
-    pageFaultPercentage = calculatePageFaultRate(lruFaults, numPages);
-    cout << "LRU\t\t" << fixed << setprecision(2) << pageFaultPercentage << "%" << endl;
-
-    // MRU
-    int mruFaults = mru(pageNumbers, numFrames);
-    pageFaultPercentage = calculatePageFaultRate(mruFaults, numPages);
-    cout << "MRU\t\t" << fixed << setprecision(2) << pageFaultPercentage << "%" << endl;
-
-    // Optimal
-    int optimalFaults = optimal(pageNumbers, numFrames);
-    pageFaultPercentage = calculatePageFaultRate(optimalFaults, numPages);
-    cout << "Optimal\t\t" << fixed << setprecision(2) << pageFaultPercentage << "%" << endl;
-
-    cout << endl;
+    // Call the appropriate page replacement algorithm based on the input
+    if (algorithm == "FIFO") {
+        return fifo(pageNumbers, numFrames);
+    } else if (algorithm == "LRU") {
+        return lru(pageNumbers, numFrames);
+    } else if (algorithm == "MRU") {
+        return mru(pageNumbers, numFrames);
+    } else if (algorithm == "Optimal") {
+        return optimal(pageNumbers, numFrames);
+    } else {
+        cerr << "Unknown algorithm: " << algorithm << endl;
+        return -1;
+    }
 }
 
 /**
- * The main function that runs experiments with different parameters.
- *
- * @return 0 on success.
+ * Main function to run simulations for different combinations of parameters
+ * and output the results.
  */
 int main() {
-    runExperiments("SampleInput.txt", 512, 4);
-    runExperiments("SampleInput.txt", 512, 12);
-    runExperiments("SampleInput.txt", 2048, 4);
-    runExperiments("SampleInput.txt", 2048, 12);
+    // Define parameters for runs
+    vector<pair<int, int>> parameters = {{512, 4}, {512, 12}, {2048, 4}, {2048, 12}};
+
+    // Read virtual addresses from the file
+    ifstream infile("SampleInput.txt");
+    vector<int> virtualAddresses;
+    int address;
+    while (infile >> address) {
+        virtualAddresses.push_back(address);
+    }
+    infile.close();
+
+    // Run simulations for each combination of parameters
+    vector<string> algorithms = {"FIFO", "LRU", "MRU", "Optimal"};
+    for (const auto& param : parameters) {
+        int pageSize = param.first;
+        int numFrames = param.second;
+        cout << "\n--------------------------------------------------\n";
+        cout << "           Virtual Memory Management          \n";
+        cout << "--------------------------------------------------\n";
+        cout << "  Page Size: " << pageSize << " Words, Number of Frames: " << numFrames << "\n";
+        cout << "--------------------------------------------------\n";
+        cout << left << setw(20) << "Algorithm" << "|  Page Fault Percentage\n";
+        cout << "--------------------|-----------------------------\n";
+
+        // Simulate each page replacement algorithm
+        for (const auto& algorithm : algorithms) {
+            int pageFaults = simulate(virtualAddresses, pageSize, numFrames, algorithm);
+
+            // Calculate page fault percentage
+            int totalReferences = virtualAddresses.size();
+            double pageFaultPercentage = (double)pageFaults / totalReferences * 100;
+
+            // Output statistics
+            cout << left << setw(20) << algorithm << "|  " << fixed << setprecision(2) << pageFaultPercentage << "%" << endl;
+        }
+        cout << endl;
+    }
 
     return 0;
 }
