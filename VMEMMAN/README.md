@@ -25,7 +25,7 @@ This program simulates virtual memory management techniques using various page r
     ```
 
 ### Running the Program
-1. Ensure that the `input.txt` file containing virtual addresses is present in the project directory.
+1. Ensure that the `SampleInput.txt` file containing virtual addresses is present in the project directory.
 2. Run the compiled executable:
     ```bash
     ./sales_system SampleInput.txt
